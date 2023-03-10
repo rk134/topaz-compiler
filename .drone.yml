@@ -1,0 +1,27 @@
+
+kind: pipeline
+name: Kernel Build
+
+clone:
+  depth: 1
+
+steps:
+ - name: Compile kernel
+   image: fr3akyphantom/droid-builder:latest
+   commands:
+      - cd /drone/src
+      - sudo apt-get install make build-essential libncurses-dev bison flex libssl-dev libelf-dev
+      - mkdir clang && cd clang
+      - bash <(curl -s https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman) -S=latest
+      - sudo apt install libelf-dev libarchive-tools
+      - bash -c "$(wget -O - https://gist.githubusercontent.com/dakkshesh07/240736992abf0ea6f0ee1d8acb57a400/raw/e97b505653b123b586fc09fda90c4076c8030732/patch-for-old-glibc.sh)"
+      - ls
+      - cd ..
+      - git clone https://github.com/aospa-lunaa/android_kernel_realme_sm7325 --depth=1 -b topaz-standalone kernel
+      - cd kernel
+      - wget https://raw.githubusercontent.com/aospa-lunaa/scripts/topaz/kernel/buildkernel.sh
+      - export TC_DIR="/drone/src/clang/bin/" && bash buildkernel.sh
+      - curl -sL https://git.io/file-transfer | sh
+      - ./transfer wet topaz*.zip | tee transfer.log
+      - cat transfer.log
+      - rm -rf topaz*.zip
