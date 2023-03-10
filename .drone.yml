@@ -1,10 +1,11 @@
 ---
+clone:
+  depth: 1
 kind: pipeline
 name: Kernel Build
-
 steps:
  - name: Compile kernel
-   image: fr3akyphantom/droid-builder:latest
+   image: ubuntu:focal
    commands:
       - cd /drone/src
       - sudo apt-get install make build-essential libncurses-dev bison flex libssl-dev libelf-dev
