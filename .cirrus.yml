@@ -37,6 +37,6 @@ task:
     - wget https://raw.githubusercontent.com/rk134/topaz-compiler/main/buildkernel.sh
     - export TC_DIR="../clang/" && bash buildkernel.sh
     - curl -sL https://git.io/file-transfer | sh
-    - /transfer wet topaz*.zip | tee transfer.log
+    - ./transfer wet topaz*.zip | tee transfer.log
     - cat transfer.log
     - rm -rf topaz*.zip
