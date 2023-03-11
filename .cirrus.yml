@@ -15,7 +15,10 @@ task:
     - mkdir working
     - cd working
     - sudo apt-get install make build-essential libncurses-dev bison flex
-      libssl-dev libelf-dev
+      libssl-dev libelf-dev ccache
+    - sudo apt-get -y install locales
+    - export LC_CTYPE=en_US.UTF-8
+    - export LC_ALL=en_US.UTF-8
   Cloning-clang_script:
     - mkdir clang
     - cd clang
@@ -29,11 +32,9 @@ task:
     - dir
     - cd ..
   Building-kernel_script:
-    - git clone https://github.com/aospa-lunaa/android_kernel_realme_sm7325
-      --depth=1 -b topaz-standalone kernel
+    - git clone https://github.com/aospa-lunaa/android_kernel_realme_sm7325 --depth=1 -b topaz-standalone kernel
     - cd kernel
-    - wget
-      https://raw.githubusercontent.com/aospa-lunaa/scripts/topaz/kernel/buildkernel.sh
+    - wget https://raw.githubusercontent.com/rk134/topaz-compiler/main/buildkernel.sh
     - export TC_DIR="../clang/" && bash buildkernel.sh
     - curl -sL https://git.io/file-transfer | sh
     - /transfer wet topaz*.zip | tee transfer.log
