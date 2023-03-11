@@ -10,6 +10,7 @@ task:
       greedy: true
       cpu: 4
       memory: 16G
+
 Setting-up-environment_script:
       - dir
       - mkdir working
