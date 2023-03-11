@@ -16,7 +16,7 @@ task:
     - cd working
     - sudo apt-get update -y
     - sudo apt-get install make build-essential libncurses-dev bison flex
-      libssl-dev libelf-dev ccache
+      libssl-dev libelf-dev ccache -y
     - sudo apt-get -y install locales
     - export LC_CTYPE=en_US.UTF-8
     - export LC_ALL=en_US.UTF-8
