@@ -1,35 +1,40 @@
+---
 env:
   TZ: Europe/London
-
 task:
-  name: "Kernel compilation"
-  timeout_in: 60m  
+  name: Kernel compilation
+  timeout_in: 60m
   container:
-      image: nexgang/ubuntu:latest
-      stateful: true
-      greedy: true
-      cpu: 4
-      memory: 16G
-
-Setting-up-environment_script:
-      - dir
-      - mkdir working
-      - cd working
-      - sudo apt-get install make build-essential libncurses-dev bison flex libssl-dev libelf-dev
-Cloning-clang_script:
-      - mkdir clang
-      - cd clang
-      - bash <(curl -s https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman) -S=latest
-      - sudo apt install libelf-dev libarchive-tools
-      -  bash -c "$(wget -O - https://gist.githubusercontent.com/dakkshesh07/240736992abf0ea6f0ee1d8acb57a400/raw/e97b505653b123b586fc09fda90c4076c8030732/patch-for-old-glibc.sh)"
-      - dir
-      - cd ..
-Building-kernel_script:
-      - git clone https://github.com/aospa-lunaa/android_kernel_realme_sm7325 --depth=1 -b topaz-standalone kernel
-      - cd kernel
-      - wget https://raw.githubusercontent.com/aospa-lunaa/scripts/topaz/kernel/buildkernel.sh
-      - export TC_DIR="../clang/" && bash buildkernel.sh
-      - curl -sL https://git.io/file-transfer | sh
-      - /transfer wet topaz*.zip | tee transfer.log
-      - cat transfer.log
-      - rm -rf topaz*.zip
+    image: nexgang/ubuntu:latest
+    stateful: true
+    greedy: true
+    cpu: 4
+    memory: 16G
+  Setting-up-environment_script:
+    - dir
+    - mkdir working
+    - cd working
+    - sudo apt-get install make build-essential libncurses-dev bison flex
+      libssl-dev libelf-dev
+  Cloning-clang_script:
+    - mkdir clang
+    - cd clang
+    - bash <(curl -s
+      https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman)
+      -S=latest
+    - sudo apt install libelf-dev libarchive-tools
+    - bash -c "$(wget -O -
+      https://gist.githubusercontent.com/dakkshesh07/240736992abf0ea6f0ee1d8acb57a400/raw/e97b505653b123b586fc09fda90c4076c8030732/patch-for-old-glibc.sh)"
+    - dir
+    - cd ..
+  Building-kernel_script:
+    - git clone https://github.com/aospa-lunaa/android_kernel_realme_sm7325
+      --depth=1 -b topaz-standalone kernel
+    - cd kernel
+    - wget
+      https://raw.githubusercontent.com/aospa-lunaa/scripts/topaz/kernel/buildkernel.sh
+    - export TC_DIR="../clang/" && bash buildkernel.sh
+    - curl -sL https://git.io/file-transfer | sh
+    - /transfer wet topaz*.zip | tee transfer.log
+    - cat transfer.log
+    - rm -rf topaz*.zip
