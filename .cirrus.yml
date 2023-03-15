@@ -12,6 +12,7 @@ task:
     memory: 16G
   Setting-up-environment_script:
     - dir
+    - ls
     - mkdir working
     - cd working
     - sudo apt-get update -y
