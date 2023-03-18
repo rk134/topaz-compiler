@@ -33,7 +33,7 @@ task:
     - dir
     - cd ..
   Building-kernel_script:
-    - git clone https://github.com/aospa-lunaa/android_kernel_realme_sm7325 --depth=1 -b topaz-standalone kernel
+    - git clone https://github.com/aospa-lunaa/android_kernel_realme_sm7325 --depth=1 -b topaz-cleanup-standalone kernel
     - cd kernel
     - wget https://raw.githubusercontent.com/rk134/topaz-compiler/main/buildkernel.sh
     - export TC_DIR="../clang/" && bash buildkernel.sh
