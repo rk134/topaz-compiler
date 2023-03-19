@@ -16,28 +16,31 @@ task:
     - mkdir working
     - cd working
     - sudo apt-get update -y
-    - sudo apt-get install make build-essential libncurses-dev bison flex
+    - sudo apt-get install make build-essential libncurses-dev bison flex repo elfutils
       libssl-dev libelf-dev ccache -y
     - sudo apt-get -y install locales
     - export LC_CTYPE=en_US.UTF-8
     - export LC_ALL=en_US.UTF-8
-  Cloning-clang_script:
-    - mkdir clang
-    - cd clang
-    - bash <(curl -s
-      https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman)
-      -S=latest
+  Building-kernel-clang_script:
+    - mkdir compiler
+    - cd compiler
+    - repo init -u https://github.com/mvaisakh/android_kernel_manifest -b eva-oneplus-5.4 --depth=1
+    - repo sync --no-tags --no-clone-bundle -j$(nproc --all)
+    - rm -rf kernel/msm-5.4
+    - git clone https://github.com/rk134/oneplus9pro --depth=1 -b lunaa-bringup-new kernel/msm-5.4
+    - sed -i s/build-user/mvaisakh/g build/_setup_env.sh
+    - sed -i s/build-host/statixos/g build/_setup_env.sh
     - sudo apt-get install libelf-dev libarchive-tools -y
-    - bash -c "$(wget -O -
-      https://gist.githubusercontent.com/dakkshesh07/240736992abf0ea6f0ee1d8acb57a400/raw/e97b505653b123b586fc09fda90c4076c8030732/patch-for-old-glibc.sh)"
-    - dir
-    - cd ..
-  Building-kernel_script:
-    - git clone https://github.com/aospa-lunaa/android_kernel_realme_sm7325 --depth=1 -b topaz-cleanup-standalone kernel
-    - cd kernel
-    - wget https://raw.githubusercontent.com/rk134/topaz-compiler/main/buildkernel.sh
-    - export TC_DIR="../clang/" && bash buildkernel.sh
+    - ./scripts/kconfig/merge_config.sh arch/arm64/configs/vendor/lahaina-nqgki_defconfig arch/arm64/configs/vendor/oplus_yupik_nqgki.config
+    - mv .config arch/arm64/configs/vendor/lahaina-nqgki_defconfig
+    - BUILD_CONFIG=kernel/msm-5.4/build.config.msm.lahaina VARIANT=nqgki DEVICE=LUNAA LTO=none BUILD_KERNEL=1 build/build.sh
+    - cp out/msm-5.4-lahaina-nqgki/dist/Image ak3/
+    - cat out/msm-5.4-lahaina-nqgki/dist/*.dtb > ak3/dtb
+    - cp out/msm-5.4-lahaina-nqgki/dist/dtbo.img ak3/
+    - cd ak3/ && zip -r9 eva-lunaa-$(/bin/date -u '+%d%m%Y%I%M')-gcc.zip * -x .git README.md ./*/placeholder
+    - cd ../
     - curl -sL https://git.io/file-transfer | sh
-    - ./transfer wet topaz*.zip | tee transfer.log
+    - ./transfer wet eva-lunaa*-clang.zip | tee transfer.log
     - cat transfer.log
     - rm -rf topaz*.zip
+    
