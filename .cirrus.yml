@@ -43,6 +43,6 @@ task:
     - cp out/msm-5.4-lahaina-nqgki/dist/dtbo.img ak3/
     - cd ak3/ && zip -r9 eva-lunaa-$(/bin/date -u '+%d%m%Y%I%M')-gcc.zip * -x .git README.md ./*/placeholder
     - curl -sL https://git.io/file-transfer | sh
-    - ./transfer wet eva-lunaa*-clang.zip | tee transfer.log
+    - ./transfer wet eva-lunaa*-gcc.zip | tee transfer.log
     - cat transfer.log
     
