@@ -16,7 +16,7 @@ task:
     - mkdir working
     - cd working
     - sudo apt-get update -y
-    - sudo apt-get install make build-essential libncurses-dev bison flex repo elfutils
+    - sudo apt-get install make build-essential libncurses-dev bison flex elfutils
       libssl-dev libelf-dev ccache -y
     - sudo apt-get -y install locales
     - export LC_CTYPE=en_US.UTF-8
@@ -24,15 +24,19 @@ task:
   Building-kernel-gcc_script:
     - mkdir compiler
     - cd compiler
+    - mkdir -p ~/.bin
+    - PATH="${HOME}/.bin:${PATH}"
+    - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/.bin/repo
+    - chmod a+rx ~/.bin/repo
+    - git config --global user.name "rk134"
+    - git config --global user.email "me@rk134.cf"
     - repo init -u https://github.com/mvaisakh/android_kernel_manifest -b eva-oneplus-5.4 --depth=1
     - repo sync --no-tags --no-clone-bundle -j$(nproc --all)
     - rm -rf kernel/msm-5.4
-    - git clone https://github.com/rk134/oneplus9pro --depth=1 -b lunaa-bringup-new kernel/msm-5.4
+    - git clone https://github.com/rk134/oneplus9pro --depth=1 -b lunaa-cbt kernel/msm-5.4
     - sed -i s/build-user/mvaisakh/g build/_setup_env.sh
     - sed -i s/build-host/statixos/g build/_setup_env.sh
     - sudo apt-get install libelf-dev libarchive-tools -y
-    - ./scripts/kconfig/merge_config.sh arch/arm64/configs/vendor/lahaina-nqgki_defconfig arch/arm64/configs/vendor/oplus_yupik_nqgki.config
-    - mv .config arch/arm64/configs/vendor/lahaina-nqgki_defconfig
     - BUILD_CONFIG=kernel/msm-5.4/build.config.msm.lahaina VARIANT=nqgki DEVICE=LUNAA LTO=none BUILD_KERNEL=1 build/build.sh
     - cp out/msm-5.4-lahaina-nqgki/dist/Image ak3/
     - cat out/msm-5.4-lahaina-nqgki/dist/*.dtb > ak3/dtb
@@ -42,5 +46,4 @@ task:
     - curl -sL https://git.io/file-transfer | sh
     - ./transfer wet eva-lunaa*-clang.zip | tee transfer.log
     - cat transfer.log
-    - rm -rf topaz*.zip
     
