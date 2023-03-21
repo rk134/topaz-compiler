@@ -36,6 +36,7 @@ task:
     - git clone https://github.com/rk134/oneplus9pro --depth=1 -b lunaa-cbt kernel/msm-5.4
     - mkdir -p prebuilts-master/clang/host/linux-x86/clang-r450784d/
     - cd prebuilts-master/clang/host/linux-x86/clang-r450784d/
+    - sudo apt install bsdtar
     - curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
     - bash antman -S=latest
     - bash antman --patch=glibc
