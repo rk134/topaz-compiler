@@ -21,7 +21,7 @@ task:
     - sudo apt-get -y install locales
     - export LC_CTYPE=en_US.UTF-8
     - export LC_ALL=en_US.UTF-8
-  Building-kernel-gcc_script:
+  Building-kernel-clang_script:
     - mkdir compiler
     - cd compiler
     - mkdir -p ~/.bin
@@ -34,10 +34,16 @@ task:
     - repo sync --no-tags --no-clone-bundle -j$(nproc --all)
     - rm -rf kernel/msm-5.4
     - git clone https://github.com/rk134/oneplus9pro --depth=1 -b lunaa-cbt kernel/msm-5.4
+    - mkdir -p prebuilts-master/clang/host/linux-x86/clang-r450784d/
+    - cd prebuilts-master/clang/host/linux-x86/clang-r450784d/
+    - curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
+    - bash antman -S=latest
+    - bash antman --patch=glibc
+    - cd ../../../../../
     - sed -i s/build-user/mvaisakh/g build/_setup_env.sh
     - sed -i s/build-host/statixos/g build/_setup_env.sh
     - sudo apt-get install libelf-dev libarchive-tools -y
-    - BUILD_CONFIG=kernel/msm-5.4/build.config.msm.lahaina DEVICE=9P VARIANT=nqgki COMPILER=gcc GCC_LTO=1 BUILD_KERNEL=1 build/build.sh
+    - BUILD_CONFIG=kernel/msm-5.4/build.config.msm.lahaina DEVICE=LUNAA VARIANT=nqgki COMPILER=clang LTO=thin BUILD_KERNEL=1 build/build.sh
     - cp out/msm-5.4-lahaina-nqgki/dist/Image ak3/
     - cat out/msm-5.4-lahaina-nqgki/dist/*.dtb > ak3/dtb
     - cp out/msm-5.4-lahaina-nqgki/dist/dtbo.img ak3/
